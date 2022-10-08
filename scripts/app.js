@@ -75,6 +75,15 @@ buildWall('horizontal', 228, 231)
 buildWall('vertical', 191, 211)
 buildWall('vertical', 168, 188)
 
+// ***** End Game **** // 
+
+function gameOver() { 
+  clearInterval(ghost1Timer)
+  clearInterval(ghost2Timer)
+  alert('Game Over!')
+}
+
+
 // ***** Ghosts *****
 
 let isFlashing = false
@@ -98,7 +107,7 @@ class Ghost {
     do {
       const randomNum = Math.floor(Math.random() * 4)
       newIndex = this.ghostIndex + directionArray[randomNum]
-    } while (cells[newIndex].classList.contains('wall') || cells[newIndex].classList.contains('ghost'))
+    } while (cells[newIndex].classList.contains('wall') || cells[newIndex].classList.contains('ghost') || cells[newIndex].classList.contains('flashing-ghost'))
     this.removeGhost()
     this.ghostIndex = newIndex
     this.addGhost()
@@ -114,6 +123,9 @@ const ghost1Timer = setInterval(() => {
     clearInterval(ghost1Timer)
     ghost1.removeGhost() 
   }
+  if (ghost1.ghostIndex === pacmanIndex && !isFlashing) { 
+    gameOver()
+  }
 }, 500)
 
 const ghost2 = new Ghost(190)
@@ -124,6 +136,9 @@ const ghost2Timer = setInterval(() => {
   if (ghost2.ghostIndex === pacmanIndex && isFlashing) { 
     clearInterval(ghost2Timer)
     ghost2.removeGhost() 
+  }
+  if (ghost2.ghostIndex === pacmanIndex && !isFlashing) { 
+    gameOver()
   }
 }, 500)
 
@@ -149,6 +164,8 @@ function isCanMove(newIndex) {
 addPacman() 
 
 document.addEventListener('keyup', event => { 
+
+  // move Pacman around the grid
   removePacman() 
   if (event.key === "ArrowRight" && isCanMove(pacmanIndex + 1)) { 
     pacmanIndex ++ 
@@ -162,6 +179,28 @@ document.addEventListener('keyup', event => {
   if (event.key === "ArrowDown" && isCanMove(pacmanIndex + width)) { 
     pacmanIndex += width 
   }
+
+  // check if ghosts are flashing and, if so, has Pacman caught a ghost?
+
+  if (isFlashing) { 
+    if (pacmanIndex === ghost1.ghostIndex) { 
+      clearInterval(ghost1Timer)
+      ghost1.removeGhost()
+    }
+    if (pacmanIndex === ghost2.ghostIndex) { 
+      clearInterval(ghost2Timer)
+      ghost2.removeGhost()
+    }
+  }
+
+  // and if not - is Pacman about to be eaten?!
+
+if (!isFlashing) { 
+  if (cells[pacmanIndex].classList.contains('ghost')) { 
+    gameOver() 
+  }
+}
+
   addPacman() 
 })
 
