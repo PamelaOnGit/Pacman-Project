@@ -50,7 +50,6 @@ function buildWall(orientation, firstCell, lastCell) {
   }
 }
 
-
 createGrid()
 addPerimeter()
 buildWall('horizontal', 42, 57)
@@ -77,6 +76,7 @@ buildWall('vertical', 191, 211)
 buildWall('vertical', 168, 188)
 
 // build Ghost Pen 
+// an empty span is also added to the cells in the ghostpen, in order to avoid errors if Pacman moves into the ghost pen
 
 const ghostPen = []
 function buildGhostPen() {
@@ -85,6 +85,10 @@ function buildGhostPen() {
     if (i === topLeft || i === topLeft + 1 || i === topLeft + width || i === topLeft + width + 1 || i === topLeft + width - 1) {
       ghostPen.push(cells[i])
     }
+    ghostPen.forEach(cell => {
+      const dotSpan = document.createElement('span')
+      cell.appendChild(dotSpan)
+    })
   }
 }
 buildGhostPen()
@@ -95,7 +99,18 @@ function addCrumb(cell) {
   cell.appendChild(dotSpan)
 }
 
+// ***** Dots / crumbs for scoring points *****
+
+// This function adds crumbs or dots to all the empty cells at the start of the game
+// it also starts a timer which selects a dot / crumb every 60s and makes it flash for 10s
+// if pacmanIndex === flashing crumb, pacman eats the flashing crumb and isFlashing = true for the ghosts
+// if pacman fails to eat the flashing crumb, the flashing crumb is removed
+// and the normal crumb, if it was there, is reinstated
+
 const flashingCellArray = []
+let flashingCrumbLongTimer = typeof setInterval
+let flashingCrumbShortTimer = typeof setInterval
+
 function addSpansToEmptyCells() {
 
   cells.forEach(cell => {
@@ -104,12 +119,12 @@ function addSpansToEmptyCells() {
       flashingCellArray.push(cell)
     }
   })
-  const flashingCrumbLongTimer = setInterval(() => {
+  flashingCrumbLongTimer = setInterval(() => {
     const randomNum = Math.floor(Math.random() * flashingCellArray.length)
     console.log(randomNum)
     let counter = 0
     let thereWasGreenDotHere = false
-    const flashingCrumbShortTimer = setInterval(() => {
+    flashingCrumbShortTimer = setInterval(() => {
       counter++
       if (flashingCellArray[randomNum].childNodes[0].classList.contains('dot')) {
         thereWasGreenDotHere = true
@@ -117,7 +132,6 @@ function addSpansToEmptyCells() {
       }
       flashingCellArray[randomNum].childNodes[0].classList.add('flashing-dot')
       if (flashingCellArray[randomNum] === cells[pacmanIndex]) {
-        console.log('Eat the flashing crumb, Pacman!')
         flashingCellArray[randomNum].classList.remove('flashing-dot')
         if (thereWasGreenDotHere) {
           flashingCellArray[randomNum].childNodes[0].classList.add('dot')
@@ -132,6 +146,7 @@ function addSpansToEmptyCells() {
         clearInterval(flashingCrumbShortTimer)
       }
     }, 100)
+
   }, 60000)
 }
 
@@ -161,6 +176,7 @@ class Ghost {
     this.lastMove = 0
   }
 
+
   removeGhost() {
     isFlashing ? cells[this.ghostIndex].classList.remove('flashing-ghost') : cells[this.ghostIndex].classList.remove('ghost')
   }
@@ -169,29 +185,44 @@ class Ghost {
     isFlashing ? cells[this.ghostIndex].classList.add('flashing-ghost') : cells[this.ghostIndex].classList.add('ghost')
   }
 
+  
+
   moveGhostIndex() {
     const directionArray = [-1, 1, -width, width]
     let newIndex = this.ghostIndex
-    // if (it is possible to keep moving in same direction){ // do so 
-    // } else { 
-    do {
-      const randomNum = Math.floor(Math.random() * 4)
-      newIndex = this.ghostIndex + directionArray[randomNum]
-    } while (cells[newIndex].classList.contains('wall') || cells[newIndex].classList.contains('ghost') || cells[newIndex].classList.contains('flashing-ghost'))
-    // }
-    this.removeGhost()
+    let prefIndex = this.ghostInex + this.lastMove
+    // if (!cells[prefIndex].classList.contains('wall')
+    // && !cells[prefIndex].classList.contains('ghost')
+    // && !cells[prefIndex].classList.contains('flashing-ghost')) {
+    //   let newIndex = prefIndex
+    // } else 
+      do {
+        const randomNum = Math.floor(Math.random() * 4)
+        newIndex = this.ghostIndex + directionArray[randomNum]
+      } while (cells[newIndex].classList.contains('wall')
+      || cells[newIndex].classList.contains('ghost')
+        || cells[newIndex].classList.contains('flashing-ghost'))
+    
+    this.lastMove = newIndex - this.ghostIndex
+
     this.ghostIndex = newIndex
-    this.addGhost()
+
   }
 }
 
+
+
 const ghost1 = new Ghost(189)
+
 const ghost1Timer = setInterval(() => {
   ghost1.removeGhost()
-
-  ghost1.moveGhostIndex()
+  if (ghost1.ghostIndex === 209 || ghost1.ghostIndex === 208) {
+    ghost1.ghostIndex -= 1
+  } else {
+    ghost1.moveGhostIndex()
+  }
   ghost1.addGhost()
-  // cells[ghost1.ghostIndex].removeChild(cells[ghost1.ghostIndex].childNodes[0])
+  console.log(ghost1.lastMove)
   if (ghost1.ghostIndex === pacmanIndex && isFlashing) {
     clearInterval(ghost1Timer)
     ghost1.removeGhost()
@@ -204,7 +235,11 @@ const ghost1Timer = setInterval(() => {
 const ghost2 = new Ghost(190)
 const ghost2Timer = setInterval(() => {
   ghost2.removeGhost()
-  ghost2.moveGhostIndex()
+  if (ghost2.ghostIndex === 209 || ghost2.ghostIndex === 208) {
+    ghost2.ghostIndex -= 1
+  } else {
+    ghost2.moveGhostIndex()
+  }
   ghost2.addGhost()
   if (ghost2.ghostIndex === pacmanIndex && isFlashing) {
     clearInterval(ghost2Timer)
@@ -218,7 +253,11 @@ const ghost2Timer = setInterval(() => {
 const ghost3 = new Ghost(210)
 const ghost3Timer = setInterval(() => {
   ghost3.removeGhost()
-  ghost3.moveGhostIndex()
+  if (ghost3.ghostIndex === 209 || ghost3.ghostIndex === 208) {
+    ghost3.ghostIndex -= 1
+  } else {
+    ghost3.moveGhostIndex()
+  }
   ghost3.addGhost()
 
   if (ghost3.ghostIndex === pacmanIndex && isFlashing) {
@@ -312,13 +351,14 @@ document.addEventListener('keyup', event => {
     }
   }
 
-  // if (cells[pacmanIndex].innerHTML === '') {
   if (cells[pacmanIndex].childNodes[0].classList.contains('dot')) {
     cells[pacmanIndex].childNodes[0].classList.remove('dot')
     score++
   }
   if (cells[pacmanIndex].childNodes[0].classList.contains('flashing-dot')) {
-    cells[pacmanIndex].childNodes[0].classList.remove('flashing-dot')
+    let thisCell = cells[pacmanIndex]
+    thisCell.childNodes[0].classList.remove('flashing-dot')
+    clearInterval(flashingCrumbShortTimer)
     isFlashing = true
 
 
