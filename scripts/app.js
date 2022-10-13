@@ -185,54 +185,49 @@ class Ghost {
     isFlashing ? cells[this.ghostIndex].classList.add('flashing-ghost') : cells[this.ghostIndex].classList.add('ghost')
   }
 
-  
+
 
   moveGhostIndex() {
     const directionArray = [-1, 1, -width, width]
     let newIndex = this.ghostIndex
-    let prefIndex = this.ghostInex + this.lastMove
-    // if (!cells[prefIndex].classList.contains('wall')
-    // && !cells[prefIndex].classList.contains('ghost')
-    // && !cells[prefIndex].classList.contains('flashing-ghost')) {
-    //   let newIndex = prefIndex
-    // } else 
+    let prefIndex = this.ghostIndex + this.lastMove
       do {
         const randomNum = Math.floor(Math.random() * 4)
         newIndex = this.ghostIndex + directionArray[randomNum]
       } while (cells[newIndex].classList.contains('wall')
       || cells[newIndex].classList.contains('ghost')
         || cells[newIndex].classList.contains('flashing-ghost'))
-    
-    this.lastMove = newIndex - this.ghostIndex
+      this.lastMove = newIndex - this.ghostIndex
+      this.ghostIndex = newIndex
 
-    this.ghostIndex = newIndex
-
+    }
   }
-}
 
 
 
-const ghost1 = new Ghost(189)
-
-const ghost1Timer = setInterval(() => {
-  ghost1.removeGhost()
-  if (ghost1.ghostIndex === 209 || ghost1.ghostIndex === 208) {
-    ghost1.ghostIndex -= 1
-  } else {
-    ghost1.moveGhostIndex()
-  }
-  ghost1.addGhost()
-  console.log(ghost1.lastMove)
-  if (ghost1.ghostIndex === pacmanIndex && isFlashing) {
-    clearInterval(ghost1Timer)
+  const ghost1 = new Ghost(209)
+ghost1.addGhost()
+  const ghost1Timer = setInterval(() => {
     ghost1.removeGhost()
-  }
-  if (ghost1.ghostIndex === pacmanIndex && !isFlashing) {
-    gameOver()
-  }
-}, 500)
+    if (ghost1.ghostIndex === 209 || ghost1.ghostIndex === 208) {
+      ghost1.ghostIndex -= 1
+    } else {
+      ghost1.moveGhostIndex()
+    }
+    ghost1.addGhost()
+    if (ghost1.ghostIndex === pacmanIndex && isFlashing) {
+      clearInterval(ghost1Timer)
+      ghost1.removeGhost()
+    }
+    if (ghost1.ghostIndex === pacmanIndex && !isFlashing) {
+      gameOver()
+    }
+  }, 500)
 
-const ghost2 = new Ghost(190)
+
+const ghost2 = new Ghost(210)
+ghost2.addGhost() 
+setTimeout(function() { 
 const ghost2Timer = setInterval(() => {
   ghost2.removeGhost()
   if (ghost2.ghostIndex === 209 || ghost2.ghostIndex === 208) {
@@ -249,8 +244,11 @@ const ghost2Timer = setInterval(() => {
     gameOver()
   }
 }, 500)
+}, 1000)
 
-const ghost3 = new Ghost(210)
+const ghost3 = new Ghost(190)
+ghost3.addGhost() 
+setTimeout(function() { 
 const ghost3Timer = setInterval(() => {
   ghost3.removeGhost()
   if (ghost3.ghostIndex === 209 || ghost3.ghostIndex === 208) {
@@ -268,20 +266,24 @@ const ghost3Timer = setInterval(() => {
     gameOver()
   }
 }, 500)
+}, 1500)
 
-// const ghost4 = new Ghost(210)
-// const ghost4Timer = setInterval(() => {
-//   ghost4.removeGhost()
-//   ghost4.moveGhostIndex()
-//   ghost4.addGhost()
-//   if (ghost4.ghostIndex === pacmanIndex && isFlashing) {
-//     clearInterval(ghost4Timer)
-//     ghost4.removeGhost()
-//   }
-//   if (ghost4.ghostIndex === pacmanIndex && !isFlashing) {
-//     gameOver()
-//   }
-// }, 500)
+const ghost4 = new Ghost(189)
+ghost4.addGhost() 
+setTimeout(function() {
+const ghost4Timer = setInterval(() => {
+  ghost4.removeGhost()
+  ghost4.moveGhostIndex()
+  ghost4.addGhost()
+  if (ghost4.ghostIndex === pacmanIndex && isFlashing) {
+    clearInterval(ghost4Timer)
+    ghost4.removeGhost()
+  }
+  if (ghost4.ghostIndex === pacmanIndex && !isFlashing) {
+    gameOver()
+  }
+}, 500)
+}, 2000)
 
 
 // ***** Pacman ***** //
