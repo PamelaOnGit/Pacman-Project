@@ -23,6 +23,7 @@ body {
   justify-content: center; 
   height: 600px; 
   width: 600px; 
+  background-color: black; 
 }
 
 .grid div { 
@@ -40,45 +41,37 @@ body {
   background-color: rgb(193, 180, 180); 
 }
 
-.ghost { 
-  background-image: url("../assets/images/Screenshot\ 2022-10-07\ at\ 11.43.38.png"); 
-  background-size: contain;
+span { 
+  border-radius: 50%; 
+  height: 20px; 
+  width: 20px; 
 }
 
-.flashing-ghost { 
-  background-image: url("../assets/images/Screenshot\ 2022-10-08\ at\ 15.42.29.png");
-  background-size: contain; 
+.pink { 
+  background-color: pink; 
+}
+
+.green { 
+  background-color: green; 
+}
+
+.blue { 
+  background-color: blue;
+}
+
+.orange { 
+  background-color: orange; 
 }
 
 .pacman { 
-  background-image: url("../assets/images/Screenshot\ 2022-10-08\ at\ 15.59.16.png"); 
-  background-size: contain; 
+  background-color: yellow; 
+  border-radius: 0; 
 }
 
-/* .dot {
-  background-image: url("../assets/images/Screenshot\ 2022-10-10\ at\ 13.46.32.png"); 
-  background-size: contain;
-} */
-
-.dot { 
-  height: 7px; 
-  width: 7px; 
-  background-color: green; 
-  border-radius: 50%; 
-  display: block; 
+.pellet { 
+  background-color: white; 
+  height: 3px; 
+  width: 3px; 
 }
 
-.flashing-dot { 
-  animation: blinker 1s step-start infinite; 
-  height: 10px; 
-  width: 10px;
-  background-color: red; 
-  border-radius: 50%; 
-  display: block; 
-} 
 
-@keyframes blinker { 
-  50% { 
-    opacity: 0; 
-  }
-}

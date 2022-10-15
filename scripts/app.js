@@ -1,379 +1,277 @@
-import { hello } from "./grid.js"
-
-
-// ***** Build the Grid *****
-// to change the size of the grid, change const width and height and width in .grid div class in main.css
-// you will also need to adjust the parameters when calling buildWall (firstCell and lastCell)
-
 const grid = document.querySelector('.grid')
 const cells = []
 const width = 20
 const cellCount = width * width
-let score = 0
+
+
+// ***** GRID *****
 
 function createGrid() {
   for (let i = 0; i < cellCount; i++) {
     const div = document.createElement('div')
-    // div.textContent = i 
+    // div.textContent = i
     grid.appendChild(div)
     cells.push(div)
   }
 }
-
-
-function addWall(array) {
-  array.forEach(index => {
-    cells[index].classList.add('wall')
-  })
-}
-
-function addPerimeter() {
-  const numArray = []
-  for (let i = 0; i < cellCount; i++) {
-    if (i < width || i >= cellCount - width || i % width === 0 || i % width === width - 1) {
-      numArray.push(i)
-    }
-  }
-  addWall(numArray)
-}
-
-function buildWall(orientation, firstCell, lastCell) {
-  if (orientation === 'horizontal') {
-    for (let i = firstCell; i < lastCell + 1; i++) {
-      cells[i].classList.add('wall')
-    }
-  }
-  if (orientation === 'vertical') {
-    for (let i = firstCell; i < lastCell + width; i += width) {
-      cells[i].classList.add('wall')
-    }
-  }
-}
-
 createGrid()
-addPerimeter()
-buildWall('horizontal', 42, 57)
-buildWall('horizontal', 342, 357)
-buildWall('vertical', 82, 302)
-buildWall('horizontal', 42, 57)
-buildWall('vertical', 95, 175)
-buildWall('vertical', 235, 295)
-buildWall('vertical', 97, 317)
-buildWall('vertical', 126, 266)
-buildWall('vertical', 133, 273)
 
-buildWall('horizontal', 84, 88)
-buildWall('horizontal', 91, 94)
-buildWall('vertical', 104, 164)
-buildWall('vertical', 224, 304)
-buildWall('horizontal', 305, 308)
-buildWall('horizontal', 311, 315)
-buildWall('horizontal', 128, 131)
-buildWall('horizontal', 268, 271)
-buildWall('horizontal', 169, 171)
-buildWall('horizontal', 228, 231)
-buildWall('vertical', 191, 211)
-buildWall('vertical', 168, 188)
-
-// build Ghost Pen 
-// an empty span is also added to the cells in the ghostpen, in order to avoid errors if Pacman moves into the ghost pen
-
-const ghostPen = []
-function buildGhostPen() {
-  let topLeft = (cellCount / 2) - (width / 2) - 1
-  for (let i = 0; i < cellCount; i++) {
-    if (i === topLeft || i === topLeft + 1 || i === topLeft + width || i === topLeft + width + 1 || i === topLeft + width - 1) {
-      ghostPen.push(cells[i])
+function addWall(direction, start, end) {
+  if (direction === 'horizontal') {
+    for (let i = start; i < end; i++) {
+      cells[i].classList.add('wall')
     }
-    ghostPen.forEach(cell => {
-      const dotSpan = document.createElement('span')
-      cell.appendChild(dotSpan)
-    })
+  }
+  if (direction === 'vertical') {
+    for (let i = start; i < end; i += width) {
+      cells[i].classList.add('wall')
+    }
   }
 }
-buildGhostPen()
 
-function addCrumb(cell) {
-  const dotSpan = document.createElement('span')
-  dotSpan.classList.add('dot')
-  cell.appendChild(dotSpan)
+addWall('horizontal', 0, width)
+addWall('horizontal', cellCount - width, cellCount)
+addWall('vertical', 0, cellCount - width)
+addWall('vertical', width - 1, cellCount - 1)
+
+addWall('horizontal', 168, 172)
+addWall('horizontal', 230, 232)
+addWall('vertical', 191, 212)
+addWall('vertical', 188, 248)
+addWall('horizontal', 266, 274)
+addWall('vertical', 133, 253)
+addWall('horizontal', 126, 133)
+addWall('vertical', 166, 266)
+addWall('vertical', 95, 315)
+addWall('vertical', 84, 324)
+addWall('horizontal', 85, 94)
+addWall('horizontal', 306, 316)
+addWall('vertical', 42, 362)
+addWall('vertical', 57, 377)
+addWall('horizontal', 44, 57)
+addWall('horizontal', 342, 356)
+
+const emptyCells = cells.filter(cell => {
+  return !cell.classList.contains('wall')
+})
+
+// every empty cells (ie not a wall) contains a span
+// the classes on these spans are added and removed to depict 
+// pacman, pellet, pellet, power-pellet, ghost, scared-ghost
+
+function addSpans() {
+  for (let i = 0; i < emptyCells.length; i++) {
+    const emptySpan = document.createElement('span')
+    emptyCells[i].appendChild(emptySpan)
+  }
 }
+addSpans()
 
-// ***** Dots / crumbs for scoring points *****
+// *************************************************** PELLETS ******
 
-// This function adds crumbs or dots to all the empty cells at the start of the game
-// it also starts a timer which selects a dot / crumb every 60s and makes it flash for 10s
-// if pacmanIndex === flashing crumb, pacman eats the flashing crumb and isFlashing = true for the ghosts
-// if pacman fails to eat the flashing crumb, the flashing crumb is removed
-// and the normal crumb, if it was there, is reinstated
-
-const flashingCellArray = []
-let flashingCrumbLongTimer = typeof setInterval
-let flashingCrumbShortTimer = typeof setInterval
-
-function addSpansToEmptyCells() {
-
-  cells.forEach(cell => {
-    if (!cell.classList.contains('wall') && !ghostPen.includes(cell)) {
-      addCrumb(cell)
-      flashingCellArray.push(cell)
-    }
+function addPellets() {
+  for (let i = 0; i < emptyCells.length; i++) {
+    emptyCells[i].childNodes[0].classList.add('pellet')
+  }
+  const ghostPen = [189, 190, 210, 209, 229]
+  ghostPen.forEach(index => { 
+    cells[index].childNodes[0].classList.remove('pellet')
   })
-  flashingCrumbLongTimer = setInterval(() => {
-    const randomNum = Math.floor(Math.random() * flashingCellArray.length)
-    console.log(randomNum)
-    let counter = 0
-    let thereWasGreenDotHere = false
-    flashingCrumbShortTimer = setInterval(() => {
-      counter++
-      if (flashingCellArray[randomNum].childNodes[0].classList.contains('dot')) {
-        thereWasGreenDotHere = true
-        flashingCellArray[randomNum].childNodes[0].classList.remove('dot')
-      }
-      flashingCellArray[randomNum].childNodes[0].classList.add('flashing-dot')
-      if (flashingCellArray[randomNum] === cells[pacmanIndex]) {
-        flashingCellArray[randomNum].classList.remove('flashing-dot')
-        if (thereWasGreenDotHere) {
-          flashingCellArray[randomNum].childNodes[0].classList.add('dot')
-        }
-        clearInterval(flashingCrumbShortTimer)
-      }
-      if (counter > 100) {
-        flashingCellArray[randomNum].childNodes[0].classList.remove('flashing-dot')
-        if (thereWasGreenDotHere) {
-          flashingCellArray[randomNum].childNodes[0].classList.add('dot')
-        }
-        clearInterval(flashingCrumbShortTimer)
-      }
-    }, 100)
-
-  }, 60000)
 }
 
-addSpansToEmptyCells()
+addPellets()
 
 
-
-
-// ***** Game Functionality - starting and ending the game, scoring points **** // 
-
-function gameOver() {
-  clearInterval(ghost1Timer)
-  clearInterval(ghost2Timer)
-  clearInterval(ghost3Timer)
-  //clearInterval(ghost4Timer)
-  alert(`Game Over! Your score: ${score}`)
-}
-
-
-// ***** Ghosts *****
-
-let isFlashing = false
+// **************************************************** GHOSTS ***** 
 
 class Ghost {
-  constructor(ghostIndex) {
-    this.ghostIndex = ghostIndex;
-    this.lastMove = 0
-  }
 
-
-  removeGhost() {
-    isFlashing ? cells[this.ghostIndex].classList.remove('flashing-ghost') : cells[this.ghostIndex].classList.remove('ghost')
-  }
+  constructor(ghostIndex, color) {
+    this.ghostIndex = ghostIndex
+    this.color = color
+    this.path = [this.ghostIndex]
+    this.ghost = document.createElement('span')
+    this.isPellet = false
+  } 
 
   addGhost() {
-    isFlashing ? cells[this.ghostIndex].classList.add('flashing-ghost') : cells[this.ghostIndex].classList.add('ghost')
+    if (cells[this.ghostIndex].childNodes[0].classList.contains('pellet')) {
+      this.isPellet = true
+      cells[this.ghostIndex].childNodes[0].classList.remove('pellet')
+    }
+    cells[this.ghostIndex].childNodes[0].classList.add(`ghost`)
+    cells[this.ghostIndex].childNodes[0].classList.add(`${this.color}`)
+    // cells[this.ghostIndex].appendChild(this.ghost)
+    // this.ghost.setAttribute("class", `ghost ${this.color}`)
   }
 
-
+  removeGhost() {
+    cells[this.ghostIndex].childNodes[0].classList.remove('ghost')
+    cells[this.ghostIndex].childNodes[0].classList.remove(`${this.color}`)
+    if (this.isPellet) { 
+      cells[this.ghostIndex].childNodes[0].classList.add('pellet')
+    }
+    // cells[this.ghostIndex].removeChild(this.ghost)
+  }
 
   moveGhostIndex() {
-    const directionArray = [-1, 1, -width, width]
-    let newIndex = this.ghostIndex
-    let prefIndex = this.ghostIndex + this.lastMove
-      do {
-        const randomNum = Math.floor(Math.random() * 4)
-        newIndex = this.ghostIndex + directionArray[randomNum]
-      } while (cells[newIndex].classList.contains('wall')
-      || cells[newIndex].classList.contains('ghost')
-        || cells[newIndex].classList.contains('flashing-ghost'))
-      this.lastMove = newIndex - this.ghostIndex
-      this.ghostIndex = newIndex
-
+    const directionArray = [this.ghostIndex - 1, this.ghostIndex + 1, this.ghostIndex - width, this.ghostIndex + width]
+    const possArray = directionArray.filter(ind => {
+      return !cells[ind].classList.contains('wall') && ind !== this.path[this.path.length - 2] && !cells[ind].innerHTML.includes('ghost')
+    })
+    const bestMove = possArray[Math.floor(Math.random() * possArray.length)]
+    if (possArray.length === 0) {
+      this.ghostIndex = this.path[this.path.length - 2]
+    } else {
+      this.ghostIndex = bestMove
     }
+    this.path.push(this.ghostIndex)
   }
 
-
-
-  const ghost1 = new Ghost(209)
-ghost1.addGhost()
-  const ghost1Timer = setInterval(() => {
-    ghost1.removeGhost()
-    if (ghost1.ghostIndex === 209 || ghost1.ghostIndex === 208) {
-      ghost1.ghostIndex -= 1
-    } else {
-      ghost1.moveGhostIndex()
-    }
-    ghost1.addGhost()
-    if (ghost1.ghostIndex === pacmanIndex && isFlashing) {
-      clearInterval(ghost1Timer)
-      ghost1.removeGhost()
-    }
-    if (ghost1.ghostIndex === pacmanIndex && !isFlashing) {
+  eatPacman() {
+    if (this.ghostIndex === pacmanIndex) {
+      console.log(`The ${this.color} ghost ate Pacman!!!`)
       gameOver()
     }
+  }
+
+}
+
+// **************************************************************** GHOST INTERVALS ***** 
+
+const pinkGhost = new Ghost(210, 'pink')
+pinkGhost.addGhost()
+let goPinkGhost = typeof setInterval
+
+const blueGhost = new Ghost(209, 'blue')
+blueGhost.addGhost()
+let goBlueGhost = typeof setInterval
+
+const orangeGhost = new Ghost(189, 'orange')
+orangeGhost.addGhost()
+let goOrangeGhost = typeof setInterval
+
+const greenGhost = new Ghost(190, 'green')
+greenGhost.addGhost()
+let goGreenGhost = typeof setInterval
+
+
+function pinkGhostInterval() {
+  goPinkGhost = setInterval(() => {
+    pinkGhost.removeGhost()
+    pinkGhost.moveGhostIndex()
+    pinkGhost.addGhost()
+    pinkGhost.eatPacman()
   }, 500)
+}
 
+function greenGhostInterval() {
+  goGreenGhost = setInterval(() => {
+    greenGhost.removeGhost()
+    greenGhost.moveGhostIndex()
+    greenGhost.addGhost()
+    greenGhost.eatPacman()
+  }, 500)
+}
 
-const ghost2 = new Ghost(210)
-ghost2.addGhost() 
-setTimeout(function() { 
-const ghost2Timer = setInterval(() => {
-  ghost2.removeGhost()
-  if (ghost2.ghostIndex === 209 || ghost2.ghostIndex === 208) {
-    ghost2.ghostIndex -= 1
-  } else {
-    ghost2.moveGhostIndex()
-  }
-  ghost2.addGhost()
-  if (ghost2.ghostIndex === pacmanIndex && isFlashing) {
-    clearInterval(ghost2Timer)
-    ghost2.removeGhost()
-  }
-  if (ghost2.ghostIndex === pacmanIndex && !isFlashing) {
-    gameOver()
-  }
-}, 500)
-}, 1000)
+function orangeGhostInterval() {
+  goOrangeGhost = setInterval(() => {
+    orangeGhost.removeGhost()
+    orangeGhost.moveGhostIndex()
+    orangeGhost.addGhost()
+    orangeGhost.eatPacman()
+  }, 500)
+}
 
-const ghost3 = new Ghost(190)
-ghost3.addGhost() 
-setTimeout(function() { 
-const ghost3Timer = setInterval(() => {
-  ghost3.removeGhost()
-  if (ghost3.ghostIndex === 209 || ghost3.ghostIndex === 208) {
-    ghost3.ghostIndex -= 1
-  } else {
-    ghost3.moveGhostIndex()
-  }
-  ghost3.addGhost()
+function blueGhostInterval() {
+  goBlueGhost = setInterval(() => {
+    blueGhost.removeGhost()
+    blueGhost.moveGhostIndex()
+    blueGhost.addGhost()
+    blueGhost.eatPacman()
+  }, 500)
+}
 
-  if (ghost3.ghostIndex === pacmanIndex && isFlashing) {
-    clearInterval(ghost3Timer)
-    ghost3.removeGhost()
-  }
-  if (ghost3.ghostIndex === pacmanIndex && !isFlashing) {
-    gameOver()
-  }
-}, 500)
-}, 1500)
-
-const ghost4 = new Ghost(189)
-ghost4.addGhost() 
-setTimeout(function() {
-const ghost4Timer = setInterval(() => {
-  ghost4.removeGhost()
-  ghost4.moveGhostIndex()
-  ghost4.addGhost()
-  if (ghost4.ghostIndex === pacmanIndex && isFlashing) {
-    clearInterval(ghost4Timer)
-    ghost4.removeGhost()
-  }
-  if (ghost4.ghostIndex === pacmanIndex && !isFlashing) {
-    gameOver()
-  }
-}, 500)
-}, 2000)
-
-
-// ***** Pacman ***** //
+// ***************************************************************** PACMAN *****
 
 let pacmanIndex = 21
-cells[pacmanIndex].childNodes[0].classList.remove('dot')
+let score = 0
+// const pacman = document.createElement('span')
+// const span = document.querySelector('span')
 
 
-function removePacman() {
-  cells[pacmanIndex].classList.remove('pacman')
-}
 
 function addPacman() {
-  cells[pacmanIndex].classList.add('pacman')
+  if (cells[pacmanIndex].innerHTML.includes('pellet')) {
+    console.log(cells[pacmanIndex].childNodes[0].classList)
+    cells[pacmanIndex].childNodes[0].classList.remove('pellet')
+    cells[pacmanIndex].childNodes[0].classList.add('pacman')
+    score ++
+  } else {
+    cells[pacmanIndex].childNodes[0].classList.add('pacman')
+  }
 }
 
-function isCanMove(newIndex) {
-  return !cells[newIndex].classList.contains('wall')
+function removePacman() {
+  cells[pacmanIndex].childNodes[0].classList.remove('pacman')
 }
 
-
-addPacman()
-
-document.addEventListener('keyup', event => {
-
-  // move Pacman around the grid
+function movePacman(event) {
   removePacman()
-  if (event.key === "ArrowRight" && isCanMove(pacmanIndex + 1)) {
+  if (event.key === 'ArrowRight' && !cells[pacmanIndex + 1].classList.contains('wall')) {
     pacmanIndex++
   }
-  if (event.key === "ArrowLeft" && isCanMove(pacmanIndex - 1)) {
+  if (event.key === 'ArrowLeft' && !cells[pacmanIndex - 1].classList.contains('wall')) {
     pacmanIndex--
   }
-  if (event.key === "ArrowUp" && isCanMove(pacmanIndex - width)) {
-    pacmanIndex -= width
-  }
-  if (event.key === "ArrowDown" && isCanMove(pacmanIndex + width)) {
+  if (event.key === 'ArrowDown' && !cells[pacmanIndex + width].classList.contains('wall')) {
     pacmanIndex += width
   }
-
-  // check if ghosts are flashing and, if so, has Pacman caught a ghost?
-
-  if (isFlashing) {
-    if (pacmanIndex === ghost1.ghostIndex) {
-      clearInterval(ghost1Timer)
-      ghost1.removeGhost()
-    }
-    if (pacmanIndex === ghost2.ghostIndex) {
-      clearInterval(ghost2Timer)
-      ghost2.removeGhost()
-    }
-    if (pacmanIndex === ghost3.ghostIndex) {
-      clearInterval(ghost3Timer)
-      ghost3.removeGhost()
-    }
-    // if (pacmanIndex === ghost4.ghostIndex) { 
-    //   clearInterval(ghost4Timer)
-    //   ghost4.removeGhost()
-    // }
-  }
-
-  // and if not - is Pacman about to be eaten?!
-
-  if (!isFlashing) {
-    if (cells[pacmanIndex].classList.contains('ghost')) {
-      gameOver()
-    }
-  }
-
-  if (cells[pacmanIndex].childNodes[0].classList.contains('dot')) {
-    cells[pacmanIndex].childNodes[0].classList.remove('dot')
-    score++
-  }
-  if (cells[pacmanIndex].childNodes[0].classList.contains('flashing-dot')) {
-    let thisCell = cells[pacmanIndex]
-    thisCell.childNodes[0].classList.remove('flashing-dot')
-    clearInterval(flashingCrumbShortTimer)
-    isFlashing = true
-
-
-    cells.forEach(cell => {
-      if (cell.classList.contains('ghost')) {
-        cell.classList.remove('ghost')
-      }
-    })
-
+  if (event.key === 'ArrowUp' && !cells[pacmanIndex - width].classList.contains('wall')) {
+    pacmanIndex -= width
   }
   addPacman()
 
-})
+
+
+  if (cells[pacmanIndex].innerHTML.includes('ghost')) {
+    console.log('Pacman got eaten!!!')
+    gameOver()
+  }
+
+}
+
+document.addEventListener('keyup', movePacman)
+
+addPacman()
+
+
+
+// ****************************************************************** GAME FUNCTIONS ***** 
+
+// START THE GHOSTS 
+function startGhosts(event) {
+  if (event.key === " ") {
+    blueGhostInterval()
+    orangeGhostInterval()
+    greenGhostInterval()
+    pinkGhostInterval()
+  }
+}
+document.addEventListener('keyup', startGhosts)
+
+
+// END THE GAME AND SHOW THE SCORE
+function gameOver() {
+  document.removeEventListener('keyup', movePacman)
+  cells[pacmanIndex].childNodes[0].classList.remove('pacman')
+  clearInterval(goBlueGhost)
+  clearInterval(goOrangeGhost)
+  clearInterval(goGreenGhost)
+  clearInterval(goPinkGhost)
+  console.log(score)
+}
+
 
 
 
