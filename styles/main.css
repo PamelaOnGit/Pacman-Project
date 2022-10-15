@@ -70,8 +70,30 @@ span {
 
 .pellet { 
   background-color: white; 
-  height: 3px; 
-  width: 3px; 
+  height: 4px; 
+  width: 4px; 
 }
 
+@keyframes blink { 
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.power { 
+  height: 8px;
+  width: 8px;
+  animation: blink 0.2s infinite; 
+}
+
+@keyframes fast-blink { 
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.scared { 
+  background-color: lightblue; 
+  animation: fast-blink 0.2s infinite; 
+}
 

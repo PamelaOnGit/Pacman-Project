@@ -57,7 +57,7 @@ const emptyCells = cells.filter(cell => {
 
 // every empty cells (ie not a wall) contains a span
 // the classes on these spans are added and removed to depict 
-// pacman, pellet, pellet, power-pellet, ghost, scared-ghost
+// pacman, pellet, pellet, power, ghost, scared
 
 function addSpans() {
   for (let i = 0; i < emptyCells.length; i++) {
@@ -74,15 +74,70 @@ function addPellets() {
     emptyCells[i].childNodes[0].classList.add('pellet')
   }
   const ghostPen = [189, 190, 210, 209, 229]
-  ghostPen.forEach(index => { 
+  ghostPen.forEach(index => {
     cells[index].childNodes[0].classList.remove('pellet')
   })
 }
-
 addPellets()
 
+// select a random cell
+// selected cell - may or may not contain a pellet
+// must not contain a ghost or pacman
+function selectPowerCell() {
+  const powerArray = emptyCells.filter(cell => {
+    return !cell.childNodes[0].classList.contains('ghost') && !cell.childNodes[0].classList.contains('pacman')
+  })
+  return powerArray[Math.floor(Math.random() * powerArray.length)]
+}
+
+let selectedCell = 0
+let isContainedPellet = false
+
+function addPowerPellet() {
+  if (selectedCell.childNodes[0].classList.contains('pellet')) {
+    isContainedPellet = true
+    selectedCell.childNodes[0].classList.add('power')
+  } else if (!selectedCell.childNodes[0].classList.contain('pellet')) {
+    selectedCell.childNodes[0].classList.add('pellet')
+    selectedCell.childNodes[0].classList.add('power')
+  }
+}
+
+function removePowerPellet() {
+  selectedCell.childNodes[0].classList.remove('power')
+  if (!isContainedPellet) {
+    selectedCell.childNodes[0].classList.remove('pellet')
+  }
+}
+
+setTimeout(() => {
+  selectedCell = selectPowerCell()
+  addPowerPellet()
+  let tenSecondTimer = 0
+  const powerPelletInterval = setInterval(() => {
+    tenSecondTimer++
+    if (tenSecondTimer > 30) {
+      removePowerPellet()
+      clearInterval(powerPelletInterval)
+    }
+  }, 1000)
+}, 10000)
 
 // **************************************************** GHOSTS ***** 
+
+// function clearCell(cell) {
+//   if (cell.childNodes[0].classList.contains('ghost')) {
+//     cell.childNodes[0].classList.remove('ghost')
+//   }
+//   if (cell.childNodes[0].classList.contains('scared')) {
+//     cell.childNodes[0].classList.remove('scared')
+//   }
+// }
+
+let isScared = false
+// when isScared = true 
+// the ghosts change color and start to flash 
+// pacman can then eat the ghosts
 
 class Ghost {
 
@@ -91,27 +146,49 @@ class Ghost {
     this.color = color
     this.path = [this.ghostIndex]
     this.ghost = document.createElement('span')
-    this.isPellet = false
-  } 
+    this.isPellet = true
+    this.isPower
+  }
 
   addGhost() {
+    // if there is a pellet on the new ghost index span
+    // the pellet class must be removed
+    // and isPellet set to true so that it can be reinstated 
     if (cells[this.ghostIndex].childNodes[0].classList.contains('pellet')) {
-      this.isPellet = true
       cells[this.ghostIndex].childNodes[0].classList.remove('pellet')
+      this.isPellet = true
     }
-    cells[this.ghostIndex].childNodes[0].classList.add(`ghost`)
-    cells[this.ghostIndex].childNodes[0].classList.add(`${this.color}`)
-    // cells[this.ghostIndex].appendChild(this.ghost)
-    // this.ghost.setAttribute("class", `ghost ${this.color}`)
+    if (cells[this.ghostIndex].childNodes[0].classList.contains('power')) {
+      cells[this.ghostIndex].childNodes[0].classList.remove('power')
+      this.isPower = true
+    }
+    // isScared? 
+    if (isScared) {
+      cells[this.ghostIndex].childNodes[0].classList.add('ghost')
+      cells[this.ghostIndex].childNodes[0].classList.add('scared')
+    } else {
+      cells[this.ghostIndex].childNodes[0].classList.add('ghost')
+      cells[this.ghostIndex].childNodes[0].classList.add(`${this.color}`)
+    }
   }
 
   removeGhost() {
-    cells[this.ghostIndex].childNodes[0].classList.remove('ghost')
-    cells[this.ghostIndex].childNodes[0].classList.remove(`${this.color}`)
-    if (this.isPellet) { 
+    // isScared ?  
+    if (isScared) {
+      cells[this.ghostIndex].childNodes[0].classList.remove('ghost')
+      cells[this.ghostIndex].childNodes[0].classList.remove('scared')
+    } else {
+      cells[this.ghostIndex].childNodes[0].classList.remove('ghost')
+      cells[this.ghostIndex].childNodes[0].classList.remove(`${this.color}`)
+    }
+    if (this.isPellet) {
       cells[this.ghostIndex].childNodes[0].classList.add('pellet')
     }
-    // cells[this.ghostIndex].removeChild(this.ghost)
+    if (this.isPower) {
+      cells[this.ghostIndex].childNodes[0].classList.add('power')
+    }
+    this.isPellet = false
+    this.isPower = false
   }
 
   moveGhostIndex() {
@@ -129,8 +206,7 @@ class Ghost {
   }
 
   eatPacman() {
-    if (this.ghostIndex === pacmanIndex) {
-      console.log(`The ${this.color} ghost ate Pacman!!!`)
+    if (this.ghostIndex === pacmanIndex && !isScared) {
       gameOver()
     }
   }
@@ -162,6 +238,11 @@ function pinkGhostInterval() {
     pinkGhost.moveGhostIndex()
     pinkGhost.addGhost()
     pinkGhost.eatPacman()
+    if (pinkGhost.ghostIndex === pacmanIndex && isScared === true) {
+      clearInterval(goPinkGhost)
+      pinkGhost.removeGhost()
+      // console.log(`pink ghost index : ${pinkGhost.ghostIndex}`)
+    }
   }, 500)
 }
 
@@ -171,6 +252,11 @@ function greenGhostInterval() {
     greenGhost.moveGhostIndex()
     greenGhost.addGhost()
     greenGhost.eatPacman()
+    if (greenGhost.ghostIndex === pacmanIndex && isScared === true) {
+      clearInterval(goGreenGhost)
+      greenGhost.removeGhost()
+      // console.log(`green ghost index: ${greenGhost.ghostIndex}`)
+    }
   }, 500)
 }
 
@@ -180,6 +266,11 @@ function orangeGhostInterval() {
     orangeGhost.moveGhostIndex()
     orangeGhost.addGhost()
     orangeGhost.eatPacman()
+    if (orangeGhost.ghostIndex === pacmanIndex && isScared === true) {
+      clearInterval(goOrangeGhost)
+      orangeGhost.removeGhost()
+      // console.log(`orangeghost index: ${orangeGhost.ghostIndex}`)
+    }
   }, 500)
 }
 
@@ -189,6 +280,11 @@ function blueGhostInterval() {
     blueGhost.moveGhostIndex()
     blueGhost.addGhost()
     blueGhost.eatPacman()
+    if (blueGhost.ghostIndex === pacmanIndex && isScared === true) {
+      clearInterval(goBlueGhost)
+      blueGhost.removeGhost()
+      // console.log(`blue ghost index : ${blueGhost.ghostIndex}`)
+    }
   }, 500)
 }
 
@@ -196,17 +292,27 @@ function blueGhostInterval() {
 
 let pacmanIndex = 21
 let score = 0
-// const pacman = document.createElement('span')
-// const span = document.querySelector('span')
-
-
 
 function addPacman() {
-  if (cells[pacmanIndex].innerHTML.includes('pellet')) {
-    console.log(cells[pacmanIndex].childNodes[0].classList)
+  // if pacmanIndex cell contains a pellet, 
+  // pacman must eat the pellet
+  // and increment the score
+  // if pacmanIndex cell contains a power-pellet, 
+  // pacman should eat the power pellet and 
+  // isScared should be set to 'true'
+  if (cells[pacmanIndex].childNodes[0].classList.contains('power')) {
+    cells[pacmanIndex].childNodes[0].classList.remove('power')
+    cells[pacmanIndex].childNodes[0].classList.remove('pellet')
+    isScared = true
+    cells[pinkGhost.ghostIndex].childNodes[0].classList.remove('pink')
+    cells[greenGhost.ghostIndex].childNodes[0].classList.remove('green')
+    cells[blueGhost.ghostIndex].childNodes[0].classList.remove('blue')
+    cells[orangeGhost.ghostIndex].childNodes[0].classList.remove('orange')
+  }
+  if (cells[pacmanIndex].childNodes[0].classList.contains('pellet')) {
     cells[pacmanIndex].childNodes[0].classList.remove('pellet')
     cells[pacmanIndex].childNodes[0].classList.add('pacman')
-    score ++
+    score++
   } else {
     cells[pacmanIndex].childNodes[0].classList.add('pacman')
   }
@@ -234,11 +340,29 @@ function movePacman(event) {
 
 
 
-  if (cells[pacmanIndex].innerHTML.includes('ghost')) {
+  if (cells[pacmanIndex].childNodes[0].classList.contains('ghost') && !isScared) {
     console.log('Pacman got eaten!!!')
     gameOver()
   }
 
+  if (pacmanIndex === pinkGhost.ghostIndex && isScared === true) {
+    console.log('Eat the ghost, Pacman!')
+    clearInterval(goPinkGhost)
+    pinkGhost.removeGhost()
+
+  }
+  if (pacmanIndex === blueGhost.ghostIndex && isScared === true) {
+    console.log('Eat the ghost, Pacman!')
+    clearInterval(goBlueGhost)
+    blueGhost.removeGhost()
+
+  }
+  if (pacmanIndex === greenGhost.ghostIndex && isScared === true) {
+    console.log('Eat the ghost, Pacman!')
+    clearInterval(goGreenGhost)
+    greenGhost.removeGhost()
+
+  }
 }
 
 document.addEventListener('keyup', movePacman)
@@ -246,10 +370,10 @@ document.addEventListener('keyup', movePacman)
 addPacman()
 
 
-
 // ****************************************************************** GAME FUNCTIONS ***** 
 
 // START THE GHOSTS 
+
 function startGhosts(event) {
   if (event.key === " ") {
     blueGhostInterval()
@@ -258,7 +382,9 @@ function startGhosts(event) {
     pinkGhostInterval()
   }
 }
-document.addEventListener('keyup', startGhosts)
+
+
+document.addEventListener('keyup', startGhosts, { once: true })
 
 
 // END THE GAME AND SHOW THE SCORE
@@ -266,13 +392,15 @@ function gameOver() {
   document.removeEventListener('keyup', movePacman)
   cells[pacmanIndex].childNodes[0].classList.remove('pacman')
   clearInterval(goBlueGhost)
+
   clearInterval(goOrangeGhost)
+
   clearInterval(goGreenGhost)
+
   clearInterval(goPinkGhost)
+
   console.log(score)
 }
-
-
 
 
 
