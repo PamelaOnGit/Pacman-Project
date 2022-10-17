@@ -97,7 +97,7 @@ function addPowerPellet() {
   if (selectedCell.childNodes[0].classList.contains('pellet')) {
     isContainedPellet = true
     selectedCell.childNodes[0].classList.add('power')
-  } else if (!selectedCell.childNodes[0].classList.contain('pellet')) {
+  } else if (!selectedCell.childNodes[0].classList.contains('pellet')) {
     selectedCell.childNodes[0].classList.add('pellet')
     selectedCell.childNodes[0].classList.add('power')
   }
@@ -116,28 +116,16 @@ setTimeout(() => {
   let tenSecondTimer = 0
   const powerPelletInterval = setInterval(() => {
     tenSecondTimer++
-    if (tenSecondTimer > 30) {
+    if (tenSecondTimer > 10) {
       removePowerPellet()
       clearInterval(powerPelletInterval)
     }
   }, 1000)
-}, 10000)
+}, 30000)
 
 // **************************************************** GHOSTS ***** 
 
-// function clearCell(cell) {
-//   if (cell.childNodes[0].classList.contains('ghost')) {
-//     cell.childNodes[0].classList.remove('ghost')
-//   }
-//   if (cell.childNodes[0].classList.contains('scared')) {
-//     cell.childNodes[0].classList.remove('scared')
-//   }
-// }
-
 let isScared = false
-// when isScared = true 
-// the ghosts change color and start to flash 
-// pacman can then eat the ghosts
 
 class Ghost {
 
@@ -196,11 +184,13 @@ class Ghost {
     const possArray = directionArray.filter(ind => {
       return !cells[ind].classList.contains('wall') && ind !== this.path[this.path.length - 2] && !cells[ind].innerHTML.includes('ghost')
     })
-    const bestMove = possArray[Math.floor(Math.random() * possArray.length)]
+
     if (possArray.length === 0) {
       this.ghostIndex = this.path[this.path.length - 2]
-    } else {
-      this.ghostIndex = bestMove
+    } else if (possArray.length === 1) {
+      this.ghostIndex = possArray[0]
+    } else if (possArray.length > 1) {
+      this.ghostIndex = possArray[Math.floor(Math.random() * possArray.length)]
     }
     this.path.push(this.ghostIndex)
   }
@@ -241,9 +231,8 @@ function pinkGhostInterval() {
     if (pinkGhost.ghostIndex === pacmanIndex && isScared === true) {
       clearInterval(goPinkGhost)
       pinkGhost.removeGhost()
-      // console.log(`pink ghost index : ${pinkGhost.ghostIndex}`)
     }
-  }, 500)
+  }, 300)
 }
 
 function greenGhostInterval() {
@@ -255,9 +244,8 @@ function greenGhostInterval() {
     if (greenGhost.ghostIndex === pacmanIndex && isScared === true) {
       clearInterval(goGreenGhost)
       greenGhost.removeGhost()
-      // console.log(`green ghost index: ${greenGhost.ghostIndex}`)
     }
-  }, 500)
+  }, 300)
 }
 
 function orangeGhostInterval() {
@@ -269,9 +257,8 @@ function orangeGhostInterval() {
     if (orangeGhost.ghostIndex === pacmanIndex && isScared === true) {
       clearInterval(goOrangeGhost)
       orangeGhost.removeGhost()
-      // console.log(`orangeghost index: ${orangeGhost.ghostIndex}`)
     }
-  }, 500)
+  }, 300)
 }
 
 function blueGhostInterval() {
@@ -283,9 +270,8 @@ function blueGhostInterval() {
     if (blueGhost.ghostIndex === pacmanIndex && isScared === true) {
       clearInterval(goBlueGhost)
       blueGhost.removeGhost()
-      // console.log(`blue ghost index : ${blueGhost.ghostIndex}`)
     }
-  }, 500)
+  }, 300)
 }
 
 // ***************************************************************** PACMAN *****
@@ -361,8 +347,13 @@ function movePacman(event) {
     console.log('Eat the ghost, Pacman!')
     clearInterval(goGreenGhost)
     greenGhost.removeGhost()
-
   }
+  if (pacmanIndex === orangeGhost.ghostIndex && isScared === true) {
+    clearInterval(goOrangeGhost)
+    orangeGhost.removeGhost()
+  }
+
+
 }
 
 document.addEventListener('keyup', movePacman)
@@ -374,17 +365,22 @@ addPacman()
 
 // START THE GHOSTS 
 
+console.log(startGhosts)
+
 function startGhosts(event) {
   if (event.key === " ") {
     blueGhostInterval()
     orangeGhostInterval()
     greenGhostInterval()
     pinkGhostInterval()
+    document.removeEventListener('keyup', startGhosts)
   }
 }
+ 
 
+console.log(startGhosts)
 
-document.addEventListener('keyup', startGhosts, { once: true })
+document.addEventListener('keyup', startGhosts)
 
 
 // END THE GAME AND SHOW THE SCORE
