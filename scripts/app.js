@@ -1,7 +1,36 @@
 const grid = document.querySelector('.grid')
 const cells = []
-const width = 20
+const width = 40
 const cellCount = width * width
+
+const text = document.querySelector('#text')
+
+// ***** MATHEMATICAL FUNCTIONS *********
+// get the index of the smallest number in an array
+
+function getIndexOfSmallest(array) {
+  let indexOfSmallest = 0
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] < array[indexOfSmallest]) {
+      indexOfSmallest = i
+    }
+  }
+  return indexOfSmallest
+}
+
+function getIndexOfBiggest(array) {
+  let indexOfBiggest = 0
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] > array[indexOfBiggest]) {
+      indexOfBiggest = i
+    }
+  }
+  return indexOfBiggest
+}
+
+function getDistance(a, b) {
+  return Math.abs(a - b)
+}
 
 
 // ***** GRID *****
@@ -34,22 +63,154 @@ addWall('horizontal', cellCount - width, cellCount)
 addWall('vertical', 0, cellCount - width)
 addWall('vertical', width - 1, cellCount - 1)
 
-addWall('horizontal', 168, 172)
-addWall('horizontal', 230, 232)
-addWall('vertical', 191, 212)
-addWall('vertical', 188, 248)
-addWall('horizontal', 266, 274)
-addWall('vertical', 133, 253)
-addWall('horizontal', 126, 133)
-addWall('vertical', 166, 266)
-addWall('vertical', 95, 315)
-addWall('vertical', 84, 324)
-addWall('horizontal', 85, 94)
-addWall('horizontal', 306, 316)
-addWall('vertical', 42, 362)
-addWall('vertical', 57, 377)
-addWall('horizontal', 44, 57)
-addWall('horizontal', 342, 356)
+addWall('horizontal', 164, 178)
+addWall('horizontal', 204, 218)
+addWall('horizontal', 182, 196)
+addWall('horizontal', 222, 236)
+
+addWall('vertical', 164, 664)
+addWall('vertical', 964, 1476)
+
+addWall('horizontal', 1444, 1458)
+addWall('horizontal', 1462, 1476)
+addWall('horizontal', 1422, 1436)
+addWall('horizontal', 1404, 1418)
+
+addWall('vertical', 275, 715)
+addWall('vertical', 995, 1435)
+
+addWall('horizontal', 737, 739)
+addWall('horizontal', 741, 744)
+addWall('horizontal', 897, 903)
+
+addWall('vertical', 736, 898)
+addWall('vertical', 743, 904)
+
+addWall('horizontal', 368, 378)
+addWall('horizontal', 382, 392)
+
+addWall('vertical', 408, 568)
+addWall('vertical', 431, 591)
+
+addWall('vertical', 1088, 1248)
+
+addWall('vertical', 417, 577)
+addWall('vertical', 422, 582)
+
+addWall('horizontal', 1248, 1258)
+addWall('horizontal', 1262, 1272)
+addWall('vertical', 1111, 1291)
+
+addWall('vertical', 1097, 1257)
+addWall('vertical', 1102, 1262)
+
+addWall('horizontal', 727, 733)
+addWall('horizontal', 887, 893)
+
+addWall('horizontal', 907, 913)
+addWall('horizontal', 747, 753)
+addWall('horizontal', 1052, 1054)
+addWall('horizontal', 1092, 1094)
+addWall('horizontal', 809, 814)
+addWall('horizontal', 826, 831)
+addWall('vertical', 705, 945)
+
+addWall('vertical', 412, 602)
+addWall('vertical', 413, 603)
+addWall('horizontal', 1066, 1068)
+addWall('horizontal', 1106, 1108)
+addWall('vertical', 1004, 1476)
+addWall('vertical', 426, 606)
+addWall('vertical', 547, 627)
+
+addWall('horizontal', 646, 659)
+addWall('horizontal', 661, 674)
+addWall('horizontal', 967, 993)
+addWall('vertical', 767, 887)
+addWall('vertical', 792, 902)
+
+addWall('horizontal', 777, 779)
+addWall('horizontal', 781, 783)
+addWall('horizontal', 777, 779)
+
+
+addWall('vertical', 313, 673)
+addWall('vertical', 993, 1393)
+addWall('vertical', 966, 1366)
+addWall('vertical', 286, 646)
+
+addWall('vertical', 522, 1083)
+addWall('vertical', 647, 673)
+addWall('vertical', 557, 1157)
+addWall('horizontal', 857, 863)
+addWall('horizontal', 1146, 1148)
+addWall('horizontal', 1186, 1188)
+
+addWall('horizontal', 1334, 1346)
+addWall('horizontal', 294, 306)
+addWall('horizontal', 82, 87)
+addWall('vertical', 82, 402)
+addWall('horizontal', 112, 117)
+addWall('vertical', 117, 437)
+addWall('vertical', 1277, 1517)
+addWall('vertical', 1242, 1482)
+
+addWall('vertical', 724, 924)
+addWall('vertical', 725, 925)
+addWall('vertical', 754, 954)
+addWall('vertical', 755, 955)
+
+addWall('horizontal', 48, 71)
+addWall('horizontal', 88, 111)
+addWall('horizontal', 179, 181)
+addWall('horizontal', 219, 221)
+
+addWall('horizontal', 1161, 1163)
+addWall('horizontal', 1521, 1523)
+addWall('horizontal', 477, 479)
+addWall('horizontal', 441, 443)
+addWall('horizontal', 1484, 1494)
+addWall('horizontal', 1535, 1545)
+addWall('horizontal', 1506, 1516)
+addWall('horizontal', 1557, 1559)
+addWall('horizontal', 1419, 1421)
+addWall('horizontal', 1459, 1461)
+addWall('horizontal', 1197, 1199)
+
+addWall('vertical', 339, 619)
+addWall('vertical', 340, 620)
+addWall('horizontal', 163, 164)
+addWall('horizontal', 196, 197)
+addWall('horizontal', 1328, 1333)
+addWall('horizontal', 1347, 1352)
+
+addWall('horizontal', 288, 293)
+addWall('horizontal', 307, 312)
+addWall('vertical', 1059, 1309)
+addWall('vertical', 1060, 1310)
+addWall('vertical', 469, 590)
+addWall('vertical', 464, 664)
+//  
+addWall('vertical', 455, 655)
+addWall('vertical', 694, 934)
+addWall('vertical', 1015, 1215)
+addWall('vertical', 1024, 1224)
+addWall('horizontal', 1226, 1228)
+addWall('horizontal', 1132, 1134)
+addWall('horizontal', 1172, 1174)
+addWall('horizontal', 1212, 1214)
+addWall('vertical', 427, 547)
+addWall('horizontal', 631, 633)
+addWall('vertical', 1069, 1229)
+addWall('vertical', 1050, 1210)
+addWall('horizontal', 1007, 1009)
+addWall('horizontal', 1031, 1033)
+addWall('vertical', 450, 610)
+addWall('horizontal', 607, 609)
+addWall('horizontal', 622, 624)
+addWall('horizontal', 616, 618)
+addWall('horizontal', 1016, 1018)
+addWall('horizontal', 1022, 1024)
 
 const emptyCells = cells.filter(cell => {
   return !cell.classList.contains('wall')
@@ -73,10 +234,6 @@ function addPellets() {
   for (let i = 0; i < emptyCells.length; i++) {
     emptyCells[i].childNodes[0].classList.add('pellet')
   }
-  const ghostPen = [189, 190, 210, 209, 229]
-  ghostPen.forEach(index => {
-    cells[index].childNodes[0].classList.remove('pellet')
-  })
 }
 addPellets()
 
@@ -110,18 +267,20 @@ function removePowerPellet() {
   }
 }
 
-setTimeout(() => {
-  selectedCell = selectPowerCell()
-  addPowerPellet()
-  let tenSecondTimer = 0
-  const powerPelletInterval = setInterval(() => {
-    tenSecondTimer++
-    if (tenSecondTimer > 10) {
-      removePowerPellet()
-      clearInterval(powerPelletInterval)
-    }
-  }, 1000)
-}, 30000)
+function powerPelletTimeout() {
+  setTimeout(() => {
+    selectedCell = selectPowerCell()
+    addPowerPellet()
+    let tenSecondTimer = 0
+    const powerPelletInterval = setInterval(() => {
+      tenSecondTimer++
+      if (tenSecondTimer > 10) {
+        removePowerPellet()
+        clearInterval(powerPelletInterval)
+      }
+    }, 1000)
+  }, 30000)
+}
 
 // **************************************************** GHOSTS ***** 
 
@@ -135,7 +294,8 @@ class Ghost {
     this.path = [this.ghostIndex]
     this.ghost = document.createElement('span')
     this.isPellet = true
-    this.isPower
+    this.isPower = false
+    this.timer = 0
   }
 
   addGhost() {
@@ -184,7 +344,9 @@ class Ghost {
     const possArray = directionArray.filter(ind => {
       return !cells[ind].classList.contains('wall') && ind !== this.path[this.path.length - 2] && !cells[ind].innerHTML.includes('ghost')
     })
-
+    if (possArray.includes(pacmanIndex)) {
+      this.ghostIndex = pacmanIndex
+    }
     if (possArray.length === 0) {
       this.ghostIndex = this.path[this.path.length - 2]
     } else if (possArray.length === 1) {
@@ -195,37 +357,102 @@ class Ghost {
     this.path.push(this.ghostIndex)
   }
 
+  runAway() {
+    const directionArray = [this.ghostIndex - 1, this.ghostIndex + 1, this.ghostIndex - width, this.ghostIndex + width]
+    const possArray = directionArray.filter(ind => {
+      return !cells[ind].classList.contains('wall') && ind !== this.path[this.path.length - 2] && !cells[ind].innerHTML.includes('ghost')
+    })
+    if (possArray.includes(pacmanIndex)) {
+      this.ghostIndex = pacmanIndex
+    }
+    if (possArray.length === 0) {
+      this.ghostIndex = this.path[this.path.length - 2]
+    } else if (possArray.length === 1) {
+      this.ghostIndex = possArray[0]
+    } else if (possArray.length > 1) {
+      const distanceArray = possArray.map(item => {
+        return getDistance(item, pacmanIndex)
+      })
+      const indexOfBiggest = getIndexOfBiggest(distanceArray)
+      this.ghostIndex = possArray[indexOfBiggest]
+    }
+    this.path.push(this.ghostIndex)
+  }
+
+  hunt(targetIndex) {
+    const directionArray = [this.ghostIndex - 1, this.ghostIndex + 1, this.ghostIndex - width, this.ghostIndex + width]
+    const possArray = directionArray.filter(ind => {
+      return !cells[ind].classList.contains('wall') && ind !== this.path[this.path.length - 2] && !cells[ind].innerHTML.includes('ghost')
+    })
+    if (possArray.includes(pacmanIndex)) {
+      this.ghostIndex = pacmanIndex
+    }
+    if (possArray.length === 0) {
+      this.ghostIndex = this.path[this.path.length - 2]
+    } else if (possArray.length === 1) {
+      this.ghostIndex = possArray[0]
+    } else if (possArray.length > 1) {
+      const distanceArray = possArray.map(item => {
+        return getDistance(item, targetIndex)
+      })
+      const indexOfSmallest = getIndexOfSmallest(distanceArray)
+      this.ghostIndex = possArray[indexOfSmallest]
+    }
+    this.path.push(this.ghostIndex)
+  }
+
   eatPacman() {
     if (this.ghostIndex === pacmanIndex && !isScared) {
       gameOver()
     }
   }
-
 }
 
 // **************************************************************** GHOST INTERVALS ***** 
 
-const pinkGhost = new Ghost(210, 'pink')
+
+
+const pinkGhost = new Ghost(818, 'pink')
 pinkGhost.addGhost()
 let goPinkGhost = typeof setInterval
 
-const blueGhost = new Ghost(209, 'blue')
+const blueGhost = new Ghost(819, 'blue')
 blueGhost.addGhost()
 let goBlueGhost = typeof setInterval
 
-const orangeGhost = new Ghost(189, 'orange')
+const orangeGhost = new Ghost(820, 'orange')
 orangeGhost.addGhost()
 let goOrangeGhost = typeof setInterval
 
-const greenGhost = new Ghost(190, 'green')
+const greenGhost = new Ghost(821, 'green')
 greenGhost.addGhost()
 let goGreenGhost = typeof setInterval
 
 
 function pinkGhostInterval() {
   goPinkGhost = setInterval(() => {
+    pinkGhost.timer++
     pinkGhost.removeGhost()
-    pinkGhost.moveGhostIndex()
+    if (!isScared) {
+      if (pinkGhost.timer < 120) {
+        pinkGhost.hunt(pacmanIndex)
+      } else if (pinkGhost.timer < 180) {
+        pinkGhost.hunt(82)
+      } else if (pinkGhost.timer < 240) {
+        pinkGhost.hunt(1474)
+      } else if (pinkGhost.timer < 300) {
+        pinkGhost.hunt(193)
+      } else if (pinkGhost.timer < 360) {
+        pinkGhost.hunt(1445)
+      } else if (pinkGhost.timer < 420) {
+        pinkGhost.moveGhostIndex()
+      }
+    } else {
+      pinkGhost.runAway()
+    }
+    if (pinkGhost.timer === 420) {
+      pinkGhost.timer = 0
+    }
     pinkGhost.addGhost()
     pinkGhost.eatPacman()
     if (pinkGhost.ghostIndex === pacmanIndex && isScared === true) {
@@ -237,8 +464,28 @@ function pinkGhostInterval() {
 
 function greenGhostInterval() {
   goGreenGhost = setInterval(() => {
+    greenGhost.timer++
     greenGhost.removeGhost()
-    greenGhost.moveGhostIndex()
+    if (!isScared) {
+      if (greenGhost.timer < 30) {
+        greenGhost.hunt(82)
+      } else if (greenGhost.timer < 60) {
+        greenGhost.hunt(1474)
+      } else if (greenGhost.timer < 90) {
+        greenGhost.hunt(193)
+      } else if (greenGhost.timer < 120) {
+        greenGhost.hunt(1445)
+      } else if (greenGhost.timer < 180) {
+        greenGhost.moveGhostIndex()
+      } else if (greenGhost.timer < 360) {
+        greenGhost.hunt(pacmanIndex)
+      }
+    } else {
+      greenGhost.runAway()
+    }
+    if (greenGhost.timer === 360) {
+      greenGhost.timer = 0
+    }
     greenGhost.addGhost()
     greenGhost.eatPacman()
     if (greenGhost.ghostIndex === pacmanIndex && isScared === true) {
@@ -250,8 +497,28 @@ function greenGhostInterval() {
 
 function orangeGhostInterval() {
   goOrangeGhost = setInterval(() => {
+    orangeGhost.timer++
     orangeGhost.removeGhost()
-    orangeGhost.moveGhostIndex()
+    if (!isScared) {
+      if (orangeGhost.timer < 30) {
+        orangeGhost.moveGhostIndex()
+      } else if (orangeGhost.timer < 60) {
+        orangeGhost.hunt(193)
+      } else if (orangeGhost.timer < 90) {
+        orangeGhost.hunt(1445)
+      } else if (orangeGhost.timer < 120) {
+        orangeGhost.hunt(1474)
+      } else if (orangeGhost.timer < 360) {
+        orangeGhost.hunt(pacmanIndex - 2)
+      } else if (orangeGhost.timer < 390) {
+        orangeGhost.hunt(82)
+      }
+    } else {
+      orangeGhost.runAway()
+    }
+    if (orangeGhost.timer === 390) {
+      orangeGhost.timer = 0
+    }
     orangeGhost.addGhost()
     orangeGhost.eatPacman()
     if (orangeGhost.ghostIndex === pacmanIndex && isScared === true) {
@@ -263,8 +530,28 @@ function orangeGhostInterval() {
 
 function blueGhostInterval() {
   goBlueGhost = setInterval(() => {
+    blueGhost.timer++
     blueGhost.removeGhost()
-    blueGhost.moveGhostIndex()
+    if (!isScared) {
+      if (blueGhost.timer < 30) {
+        blueGhost.hunt(193)
+      } else if (blueGhost.timer < 60) {
+        blueGhost.hunt(1445)
+      } else if (blueGhost.timer < 90) {
+        blueGhost.moveGhostIndex()
+      } else if (blueGhost.timer < 300) {
+        blueGhost.hunt(pacmanIndex + 2)
+      } else if (blueGhost.timer < 360) {
+        blueGhost.hunt(82)
+      } else if (blueGhost.timer < 420) {
+        blueGhost.hunt(1474)
+      }
+    } else {
+      blueGhost.runAway()
+    }
+    if (blueGhost.timer === 420) {
+      blueGhost.timer = 0
+    }
     blueGhost.addGhost()
     blueGhost.eatPacman()
     if (blueGhost.ghostIndex === pacmanIndex && isScared === true) {
@@ -276,7 +563,7 @@ function blueGhostInterval() {
 
 // ***************************************************************** PACMAN *****
 
-let pacmanIndex = 21
+let pacmanIndex = 41
 let score = 0
 
 function addPacman() {
@@ -290,6 +577,18 @@ function addPacman() {
     cells[pacmanIndex].childNodes[0].classList.remove('power')
     cells[pacmanIndex].childNodes[0].classList.remove('pellet')
     isScared = true
+    let scaredCounter = 0
+    const scaredTimer = setInterval(() => {
+      scaredCounter++
+      if (scaredCounter > 10) {
+        isScared = false
+        cells[pinkGhost.ghostIndex].childNodes[0].classList.remove('scared')
+        cells[greenGhost.ghostIndex].childNodes[0].classList.remove('scared')
+        cells[blueGhost.ghostIndex].childNodes[0].classList.remove('scared')
+        cells[orangeGhost.ghostIndex].childNodes[0].classList.remove('scared')
+        clearInterval(scaredTimer)
+      }
+    }, 1000)
     cells[pinkGhost.ghostIndex].childNodes[0].classList.remove('pink')
     cells[greenGhost.ghostIndex].childNodes[0].classList.remove('green')
     cells[blueGhost.ghostIndex].childNodes[0].classList.remove('blue')
@@ -322,29 +621,27 @@ function movePacman(event) {
   if (event.key === 'ArrowUp' && !cells[pacmanIndex - width].classList.contains('wall')) {
     pacmanIndex -= width
   }
+  console.log(pacmanIndex)
   addPacman()
 
 
 
   if (cells[pacmanIndex].childNodes[0].classList.contains('ghost') && !isScared) {
-    console.log('Pacman got eaten!!!')
     gameOver()
   }
 
   if (pacmanIndex === pinkGhost.ghostIndex && isScared === true) {
-    console.log('Eat the ghost, Pacman!')
+
     clearInterval(goPinkGhost)
     pinkGhost.removeGhost()
 
   }
   if (pacmanIndex === blueGhost.ghostIndex && isScared === true) {
-    console.log('Eat the ghost, Pacman!')
     clearInterval(goBlueGhost)
     blueGhost.removeGhost()
 
   }
   if (pacmanIndex === greenGhost.ghostIndex && isScared === true) {
-    console.log('Eat the ghost, Pacman!')
     clearInterval(goGreenGhost)
     greenGhost.removeGhost()
   }
@@ -356,7 +653,7 @@ function movePacman(event) {
 
 }
 
-document.addEventListener('keyup', movePacman)
+
 
 addPacman()
 
@@ -365,7 +662,6 @@ addPacman()
 
 // START THE GHOSTS 
 
-console.log(startGhosts)
 
 function startGhosts(event) {
   if (event.key === " ") {
@@ -374,16 +670,114 @@ function startGhosts(event) {
     greenGhostInterval()
     pinkGhostInterval()
     document.removeEventListener('keyup', startGhosts)
+    document.addEventListener('keyup', movePacman)
+    powerPelletTimeout()
   }
 }
- 
 
-console.log(startGhosts)
 
 document.addEventListener('keyup', startGhosts)
 
 
 // END THE GAME AND SHOW THE SCORE
+
+
+function addLetter(direction, start, end) {
+  if (direction === 'h') {
+    for (let i = start; i < end; i++) {
+      cells[i].classList.add('letter1')
+    }
+  }
+  if (direction === 'v') {
+    for (let i = start; i < end; i += width) {
+      cells[i].classList.add('letter1')
+    }
+  }
+}
+
+function writeGameOver() {
+  // G
+  addLetter('v', 123, 603)
+  addLetter('h', 123, 129)
+  addLetter('v', 129, 329)
+  addLetter('h', 603, 609)
+  addLetter('v', 449, 609)
+  addLetter('v', 124, 145)
+  addLetter('h', 446, 450)
+  // A
+  addLetter('h', 132, 138)
+  addLetter('h', 451, 458)
+  addLetter('v', 171, 651)
+  addLetter('v', 178, 658)
+
+  // M
+  addLetter('v', 140, 660)
+  addLetter('v', 148, 668)
+  addLetter('v', 141, 221)
+  addLetter('v', 147, 227)
+  addLetter('v', 182, 262)
+  addLetter('v', 186, 266)
+  addLetter('v', 223, 303)
+  addLetter('v', 225, 305)
+  addLetter('v', 264, 344)
+
+  // E
+  addLetter('v', 150, 650)
+  addLetter('h', 150, 157)
+  addLetter('h', 470, 476)
+  addLetter('h', 631, 637)
+
+  // O 
+  // addLetter('v', 221, 361)
+  // addLetter('v', 224, 364)
+  // addLetter('h', 221, 224)
+  // addLetter('h', 341, 344)
+
+  // V 
+  // addLetter('v', 226, 346)
+  // addLetter('v', 229, 349)
+  // addLetter('h', 347, 349)
+
+  // E
+  // addLetter('v', 231, 371)
+  // addLetter('h', 231, 234)
+  // addLetter('h', 291, 294)
+  // addLetter('h', 351, 354)
+
+  // R
+  // addLetter('v', 235, 375)
+  // addLetter('v', 238, 298)
+  // addLetter('v', 358, 378)
+  // addLetter('h', 235, 238)
+  // addLetter('h', 295, 298)
+  // addLetter('h', 316, 317)
+  // addLetter('h', 337, 338)
+
+  const purpleArray = []
+  const backgroundArray = []
+  cells.forEach(cell => {
+    if (cell.classList.contains('letter1')) {
+      purpleArray.push(cell)
+    } else {
+      backgroundArray.push(cell)
+    }
+  })
+  backgroundArray.forEach(cell => {
+    cell.classList.add('transparent')
+  })
+  setInterval(() => {
+    purpleArray.forEach(cell => {
+      const randomNum = Math.floor(Math.random() * 3)
+      if (randomNum === 0) {
+        cell.classList.toggle('letter2')
+      }
+    })
+  }, 500)
+}
+
+
+
+
 function gameOver() {
   document.removeEventListener('keyup', movePacman)
   cells[pacmanIndex].childNodes[0].classList.remove('pacman')
@@ -396,7 +790,18 @@ function gameOver() {
   clearInterval(goPinkGhost)
 
   console.log(score)
+
+
+  writeGameOver()
 }
+
+function reset() { 
+  
+}
+
+
+
+
 
 
 
