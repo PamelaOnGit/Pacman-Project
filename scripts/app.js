@@ -4,6 +4,7 @@ const width = 40
 const cellCount = width * width
 
 const text = document.querySelector('#text')
+const displayScore = document.querySelector('#score')
 
 // ***** MATHEMATICAL FUNCTIONS *********
 // get the index of the smallest number in an array
@@ -274,7 +275,7 @@ function powerPelletTimeout() {
     let tenSecondTimer = 0
     const powerPelletInterval = setInterval(() => {
       tenSecondTimer++
-      if (tenSecondTimer > 10) {
+      if (tenSecondTimer > 15) {
         removePowerPellet()
         clearInterval(powerPelletInterval)
       }
@@ -459,7 +460,7 @@ function pinkGhostInterval() {
       clearInterval(goPinkGhost)
       pinkGhost.removeGhost()
     }
-  }, 300)
+  }, 200)
 }
 
 function greenGhostInterval() {
@@ -492,7 +493,7 @@ function greenGhostInterval() {
       clearInterval(goGreenGhost)
       greenGhost.removeGhost()
     }
-  }, 300)
+  }, 200)
 }
 
 function orangeGhostInterval() {
@@ -525,7 +526,7 @@ function orangeGhostInterval() {
       clearInterval(goOrangeGhost)
       orangeGhost.removeGhost()
     }
-  }, 300)
+  }, 200)
 }
 
 function blueGhostInterval() {
@@ -557,13 +558,17 @@ function blueGhostInterval() {
     if (blueGhost.ghostIndex === pacmanIndex && isScared === true) {
       clearInterval(goBlueGhost)
       blueGhost.removeGhost()
+      // const eatGhost = document.querySelector('audio')
+      // eatGhost.src = 'assets/sounds/pacman_eatghost.wav'
+      // eatGhost.play()
     }
-  }, 300)
+  }, 200)
 }
 
 // ***************************************************************** PACMAN *****
 
 let pacmanIndex = 41
+cells[pacmanIndex].childNodes[0].classList.remove('pellet')
 let score = 0
 
 function addPacman() {
@@ -580,7 +585,7 @@ function addPacman() {
     let scaredCounter = 0
     const scaredTimer = setInterval(() => {
       scaredCounter++
-      if (scaredCounter > 10) {
+      if (scaredCounter > 20) {
         isScared = false
         cells[pinkGhost.ghostIndex].childNodes[0].classList.remove('scared')
         cells[greenGhost.ghostIndex].childNodes[0].classList.remove('scared')
@@ -597,6 +602,7 @@ function addPacman() {
   if (cells[pacmanIndex].childNodes[0].classList.contains('pellet')) {
     cells[pacmanIndex].childNodes[0].classList.remove('pellet')
     cells[pacmanIndex].childNodes[0].classList.add('pacman')
+ 
     score++
   } else {
     cells[pacmanIndex].childNodes[0].classList.add('pacman')
@@ -635,19 +641,36 @@ function movePacman(event) {
     clearInterval(goPinkGhost)
     pinkGhost.removeGhost()
 
+    // const eatGhost = document.querySelector('audio')
+    // eatGhost.src = 'assets/sounds/pacman_eatghost.wav'
+    // eatGhost.play()
+
   }
   if (pacmanIndex === blueGhost.ghostIndex && isScared === true) {
     clearInterval(goBlueGhost)
     blueGhost.removeGhost()
 
+    // const eatGhost = document.querySelector('audio')
+    // eatGhost.src = 'assets/sounds/pacman_eatghost.wav'
+    // eatGhost.play()
+
   }
   if (pacmanIndex === greenGhost.ghostIndex && isScared === true) {
     clearInterval(goGreenGhost)
     greenGhost.removeGhost()
+
+    // const eatGhost = document.querySelector('audio')
+    // eatGhost.src = 'assets/sounds/pacman_eatghost.wav'
+    // eatGhost.play()
   }
   if (pacmanIndex === orangeGhost.ghostIndex && isScared === true) {
     clearInterval(goOrangeGhost)
     orangeGhost.removeGhost()
+
+    // const eatGhost = document.querySelector('audio')
+    // eatGhost.src = 'assets/sounds/pacman_eatghost.wav'
+    // eatGhost.play()
+
   }
 
 
@@ -665,6 +688,8 @@ addPacman()
 
 function startGhosts(event) {
   if (event.key === " ") {
+    text.style.color = 'black'
+    cells[pacmanIndex].childNodes[0].classList.remove('pellet')
     blueGhostInterval()
     orangeGhostInterval()
     greenGhostInterval()
@@ -672,6 +697,9 @@ function startGhosts(event) {
     document.removeEventListener('keyup', startGhosts)
     document.addEventListener('keyup', movePacman)
     powerPelletTimeout()
+    // const pacmanBeginning = document.querySelector('audio') 
+    // pacmanBeginning.src = 'assets/pacman_beginning.wav'
+    // pacmanBeginning.play()
   }
 }
 
@@ -728,36 +756,52 @@ function writeGameOver() {
   addLetter('h', 631, 637)
 
   // O 
-  // addLetter('v', 221, 361)
-  // addLetter('v', 224, 364)
-  // addLetter('h', 221, 224)
-  // addLetter('h', 341, 344)
+  addLetter('v', 1004, 1403)
+  addLetter('v', 1010, 1410)
+  addLetter('h', 965, 970)
+  addLetter('h', 1405, 1410)
 
   // V 
-  // addLetter('v', 226, 346)
-  // addLetter('v', 229, 349)
-  // addLetter('h', 347, 349)
+  addLetter('v', 972, 1332)
+  addLetter('v', 979, 1339)
+  addLetter('v', 1333, 1413)
+  addLetter('h', 1374, 1375)
+  addLetter('h', 1377, 1379)
+  addLetter('h', 1338, 1339)
+  addLetter('h', 1415, 1417)
 
   // E
-  // addLetter('v', 231, 371)
-  // addLetter('h', 231, 234)
-  // addLetter('h', 291, 294)
-  // addLetter('h', 351, 354)
+  addLetter('v', 981, 1441)
+  addLetter('h', 981, 988)
+  addLetter('h', 1301, 1307)
+  addLetter('h', 1422, 1428)
 
   // R
-  // addLetter('v', 235, 375)
-  // addLetter('v', 238, 298)
+  addLetter('v', 990, 1470)
+  // addLetter('h', 238, 298)
   // addLetter('v', 358, 378)
-  // addLetter('h', 235, 238)
-  // addLetter('h', 295, 298)
-  // addLetter('h', 316, 317)
-  // addLetter('h', 337, 338)
+
+  addLetter('h', 990, 995)
+  addLetter('h', 1035, 1036)
+  addLetter('v', 1076, 1117)
+  addLetter('h', 1155, 1156)
+  addLetter('h', 1190, 1195)
+  addLetter('v', 1233, 1273)
+  addLetter('v', 1274, 1314)
+  addLetter('v', 1315, 1355)
+  addLetter('v', 1356, 1476)
 
   const purpleArray = []
   const backgroundArray = []
   cells.forEach(cell => {
     if (cell.classList.contains('letter1')) {
       purpleArray.push(cell)
+      setInterval(() => {
+        const randomNum = Math.floor(Math.random() * 2)
+        if (randomNum === 0) {
+          cell.classList.toggle('letter2')
+        }
+      }, 100)
     } else {
       backgroundArray.push(cell)
     }
@@ -765,20 +809,24 @@ function writeGameOver() {
   backgroundArray.forEach(cell => {
     cell.classList.add('transparent')
   })
-  setInterval(() => {
-    purpleArray.forEach(cell => {
-      const randomNum = Math.floor(Math.random() * 3)
-      if (randomNum === 0) {
-        cell.classList.toggle('letter2')
-      }
-    })
-  }, 500)
+  // setInterval(() => { 
+  //   purpleArray.forEach(cell => {
+  //     //  
+  //     //  
+  //     const randomNum = Math.floor(Math.random() * 3)
+  //     if (randomNum === 0) {
+  //       cell.childNodes[0].classList.toggle('letter3')
+  //     }
+  //   })
+  // }, 500)
 }
 
-
+// gameOver()
 
 
 function gameOver() {
+
+  displayScore.innerHTML = `Score: ${score}`
   document.removeEventListener('keyup', movePacman)
   cells[pacmanIndex].childNodes[0].classList.remove('pacman')
   clearInterval(goBlueGhost)
@@ -791,12 +839,20 @@ function gameOver() {
 
   console.log(score)
 
-
   writeGameOver()
+
+  text.style.color = 'white'
+  text.innerHTML = 'RESET'
+  text.addEventListener('click', reset)
+
+  // const pacmanDeath = document.querySelector('audio')
+  // pacmanDeath.src = 'assets/sounds/pacman_death.wav'
+  // pacmanDeath.play() 
+
 }
 
-function reset() { 
-  
+function reset() {
+  location.reload()
 }
 
 

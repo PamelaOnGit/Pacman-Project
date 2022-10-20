@@ -10,6 +10,11 @@
   padding-top: 20px; 
 }
 
+#score { 
+  font-size: 30px; 
+  padding: 20px;
+}
+
 body { 
   height: 100vh; 
   margin: 0; 
@@ -114,7 +119,7 @@ span {
 }
 
 .letter1 { 
-  background-color: darkmagenta;
+  background-color: darkmagenta; 
 }
 
 .letter2 { 
