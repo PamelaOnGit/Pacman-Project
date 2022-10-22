@@ -29,9 +29,20 @@ function getIndexOfBiggest(array) {
   return indexOfBiggest
 }
 
-function getDistance(a, b) {
-  return Math.abs(a - b)
+function getDistance(possIndex, targetIndex) { 
+  const possY = Math.floor(possIndex / width)
+  const targetY = Math.floor(targetIndex / width)
+  const possX = possIndex % width
+  const targetX = targetIndex % width
+  const aSquared = (targetY - possY) * (targetY - possY)
+  const bSquared = (targetX - possX) * (targetX - possX)
+  const distance = Math.sqrt(aSquared + bSquared)
+  return distance
 }
+
+// function getDistance(a, b) {
+//   return Math.abs(a - b)
+// }
 
 
 // ***** GRID *****
@@ -718,14 +729,14 @@ function addLetter(direction, start, end) {
   }
   if (direction === 'v') {
     for (let i = start; i < end; i += width) {
-      cells[i].classList.add('letter1')
+      cells[i].classList.add('letter1')      
     }
   }
 }
 
 function writeGameOver() {
   // G
-  addLetter('v', 123, 603)
+  addLetter('v', 163, 603)
   addLetter('h', 123, 129)
   addLetter('v', 129, 329)
   addLetter('h', 603, 609)
@@ -793,6 +804,10 @@ function writeGameOver() {
 
   const purpleArray = []
   const backgroundArray = []
+  const allSpans = document.querySelectorAll('span')
+  allSpans.forEach(span => { 
+    span.classList.add('pellet')
+  })
   cells.forEach(cell => {
     if (cell.classList.contains('letter1')) {
       purpleArray.push(cell)
